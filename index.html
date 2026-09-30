@@ -65,7 +65,7 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;color:inhe
 .fortune-btn{flex:none;font-size:13px;color:var(--gold-deep);font-weight:600;padding:6px 8px;border-radius:8px}
 .fortune-btn:active{background:var(--bg-2)}
 /* ===== 入口 ===== */
-.entry-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:14px}
+.entry-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-top:14px}
 .entry{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:16px 8px 13px;display:flex;flex-direction:column;align-items:center;gap:9px;transition:transform .12s,box-shadow .12s}
 .entry:active{transform:scale(.96)}
 .entry .entry-ic{width:44px;height:44px;border-radius:13px;background:var(--bg-2);display:flex;align-items:center;justify-content:center}
@@ -122,8 +122,30 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;color:inhe
 .about h2{font-size:16px;color:var(--ink);margin-bottom:8px}
 .about p{margin-bottom:10px}
 .about .warn{color:var(--accent);font-weight:600}
+/* ===== 摸鱼小游戏 ===== */
+.game-status{display:flex;justify-content:space-between;gap:8px;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:10px 14px;margin-bottom:10px}
+.game-stat{flex:1;text-align:center}
+.game-stat b{display:block;font-size:22px;font-variant-numeric:tabular-nums;line-height:1.2}
+.game-stat span{font-size:11px;color:var(--ink-dim)}
+.game-stat.hl b{color:var(--accent)}
+.game-stat.dbl b{color:var(--gold-deep)}
+.game-canvas-wrap{position:relative;background:linear-gradient(180deg,#0B3B57,#126A8A);border-radius:16px;overflow:hidden;box-shadow:var(--shadow)}
+.game-canvas{display:block;width:100%;height:400px;touch-action:none;cursor:crosshair}
+.game-rule{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:20px 18px;box-shadow:var(--shadow)}
+.game-rule h3{font-size:17px;margin-bottom:12px}
+.game-rule ul{list-style:none;display:flex;flex-direction:column;gap:9px;font-size:14px;line-height:1.6}
+.game-rule li{display:flex;gap:9px;align-items:baseline}
+.game-rule .dot{flex:none;width:7px;height:7px;border-radius:50%;background:var(--accent);transform:translateY(-2px)}
+.game-rule .gold{color:var(--gold-deep);font-weight:600}
+.game-rule .warn2{color:var(--accent);font-weight:600}
+.game-actions{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:16px}
+.game-score{font-size:56px;font-weight:800;line-height:1;margin:8px 0 2px;font-variant-numeric:tabular-nums}
+.game-meta{font-size:13px;color:var(--ink-dim);line-height:1.9;margin-bottom:6px}
+.game-tip{font-size:12px;color:var(--ink-dim);text-align:center;margin-top:12px}
+.game-sound{position:absolute;right:10px;bottom:10px;z-index:5;width:34px;height:34px;border-radius:50%;background:rgba(255,255,255,.22);color:#fff;display:flex;align-items:center;justify-content:center;backdrop-filter:blur(2px)}
+.game-sound svg{width:17px;height:17px}
 /* ===== 底部导航 ===== */
-.tabbar{display:grid;grid-template-columns:repeat(4,1fr);border-top:1px solid var(--line);background:var(--card);padding:6px 8px calc(8px + env(safe-area-inset-bottom))}
+.tabbar{display:grid;grid-template-columns:repeat(5,1fr);border-top:1px solid var(--line);background:var(--card);padding:6px 8px calc(8px + env(safe-area-inset-bottom))}
 .tab{display:flex;flex-direction:column;align-items:center;gap:4px;padding:8px 4px;border-radius:12px;font-size:11px;color:var(--ink-dim);font-weight:600}
 .tab svg{width:21px;height:21px;stroke:currentColor}
 .tab.is-active{color:var(--accent);background:rgba(230,67,46,.07)}
@@ -231,6 +253,10 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;color:inhe
           <span class="entry-ic"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6M9 15h6M9 11h2"/></svg></span>
           <b>诊断报告</b><span>生成分享卡片</span>
         </button>
+        <button class="entry" data-go="game">
+          <span class="entry-ic"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linejoin="round"><circle cx="9.5" cy="12" r="6.5"/><path d="M15.5 12l7-4.5v9z"/></svg></span>
+          <b>摸鱼小游戏</b><span>用手摸鱼 停不下来</span>
+        </button>
       </div>
 
       <div class="rank" id="rank-card">
@@ -274,6 +300,11 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;color:inhe
       <p class="report-hint" id="report-hint">先去测一次摸鱼指数，再生成你的专属诊断报告卡。</p>
     </section>
 
+    <!-- ===== 视图：游戏 ===== -->
+    <section class="view" id="view-game" data-view="game">
+      <div id="game-box"></div>
+    </section>
+
     <!-- ===== 视图：关于 ===== -->
     <section class="view" id="view-about" data-view="about">
       <div class="about">
@@ -291,6 +322,7 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;color:inhe
     <button class="tab" data-go="quiz"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round"><path d="M10 2v6l-6 6a2 2 0 0 0 0 3l2 2a2 2 0 0 0 3 0l6-6h6"/><path d="M19 4l-3 3M21 6l-3 3"/></svg>测试</button>
     <button class="tab" data-go="excuse"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="8" height="8" rx="1.5"/><rect x="13" y="3" width="8" height="8" rx="1.5"/><rect x="3" y="13" width="8" height="8" rx="1.5"/><rect x="13" y="13" width="8" height="8" rx="1.5"/></svg>理由</button>
     <button class="tab" data-go="report"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6M9 15h6M9 11h2"/></svg>报告</button>
+    <button class="tab" data-go="game"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linejoin="round"><circle cx="9.5" cy="12" r="6.5"/><path d="M15.5 12l7-4.5v9z"/></svg>摸鱼</button>
   </nav>
 
   <footer class="foot-note">摸鱼五分钟，快乐一整天，回来干活更有劲。<br>本页面纯娱乐，仅供个人摸鱼使用。</footer>
@@ -788,6 +820,310 @@ function downloadCard(w, h, name){
   });
 })();
 
+/* ===== 模块：摸鱼小游戏 ===== */
+var Game = {
+  state: 'idle', score: 0, combo: 0, bestCombo: 0, lastTouch: 0,
+  multi: 1, double: 0, timeLeft: 30, fish: [], parts: [], texts: [],
+  koiTimer: 0, sharkTimer: 0, speedBoost: 1, raf: 0, rafRunning: false,
+  lastTs: 0, fishCaught: 0, muted: false, w: 600
+};
+var GAME_TIERS = [
+  { min: 350, name: '摸鱼之神', sub: '万鱼臣服，手速已登峰造极' },
+  { min: 200, name: '摸鱼王者', sub: '手速碾压全场' },
+  { min: 100, name: '摸鱼快手', sub: '鱼塘里的常胜将军' },
+  { min: 50, name: '鱼塘老手', sub: '游刃有余' },
+  { min: 20, name: '鱼塘新手', sub: '入门即巅峰' },
+  { min: 0, name: '摸了个寂寞', sub: '再摸一次吧' }
+];
+function gameTier(score){
+  for (var i = 0; i < GAME_TIERS.length; i++){ if (score >= GAME_TIERS[i].min) return GAME_TIERS[i]; }
+  return GAME_TIERS[GAME_TIERS.length - 1];
+}
+function beep(freq, dur, vol){
+  try{
+    if (Game.muted) return;
+    var AC = window.AudioContext || window.webkitAudioContext;
+    if (!AC) return;
+    if (!Game._ac) Game._ac = new AC();
+    if (Game._ac.state === 'suspended') Game._ac.resume();
+    var o = Game._ac.createOscillator(), g = Game._ac.createGain();
+    o.type = 'sine'; o.frequency.value = freq;
+    var t = Game._ac.currentTime;
+    g.gain.setValueAtTime(vol, t);
+    g.gain.exponentialRampToValueAtTime(0.001, t + dur);
+    o.connect(g); g.connect(Game._ac.destination);
+    o.start(t); o.stop(t + dur);
+  }catch(e){}
+}
+function renderGame(){
+  var box = $('#game-box');
+  if (Game.state === 'idle'){
+    box.innerHTML =
+      '<div class="game-rule"><h3>摸鱼达人 · 手速大作战</h3><ul>' +
+      '<li><span class="dot"></span><span>30 秒限时，在鱼塘里用手摸鱼，摸到 1 条 +1 分</span></li>' +
+      '<li><span class="dot"></span><span>连击每 5 次倍率 +1（最高 <span class="gold">x5</span>）；3 秒不摸，连击清零从头再来</span></li>' +
+      '<li><span class="dot"></span><span>金色<span class="gold">锦鲤</span> +5 分，还送你 3 秒全场双倍</span></li>' +
+      '<li><span class="dot"></span><span class="warn2">小心鲨鱼！</span>摸到扣 3 分并打断连击</span></li>' +
+      '<li><span class="dot"></span><span>鱼会越游越快，心跳加速，能摸多少摸多少</span></li>' +
+      '</ul><div class="game-actions">' +
+      '<button class="btn btn-primary" id="game-start">开摸</button>' +
+      '<button class="btn btn-ghost" id="game-best">历史最高 ' + store.get('gbest', 0) + '</button>' +
+      '</div><p class="game-tip">桌面用鼠标划过鱼，手机上用手指在鱼塘里滑动</p></div>';
+    $('#game-start').addEventListener('click', startGame);
+    $('#game-best').addEventListener('click', function(){
+      toast('历史最高 ' + store.get('gbest', 0) + ' 分 · 累计摸鱼 ' + store.get('gfish', 0) + ' 条');
+    });
+    return;
+  }
+  if (Game.state === 'playing'){
+    box.innerHTML =
+      '<div class="game-status">' +
+      '<div class="game-stat"><b id="g-time">30</b><span>秒</span></div>' +
+      '<div class="game-stat hl"><b id="g-score">0</b><span>分</span></div>' +
+      '<div class="game-stat"><b id="g-combo">0</b><span>连击</span></div>' +
+      '<div class="game-stat" id="g-multi-box"><b id="g-multi">x1</b><span>倍率</span></div>' +
+      '</div>' +
+      '<div class="game-canvas-wrap"><canvas id="game-canvas" class="game-canvas"></canvas>' +
+      '<button class="game-sound" id="game-mute" aria-label="音效开关"><svg id="g-mute-ic" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5L6 9H2v6h4l5 4z"/><path d="M16 9l5 6M21 9l-5 6"/></svg></button></div>' +
+      '<p class="game-tip">金锦鲤出现会有金色闪光，鲨鱼来了快躲开！</p>';
+    bindGame();
+    if (!Game.rafRunning){
+      Game.rafRunning = true;
+      Game.raf = requestAnimationFrame(loop);
+    }
+    return;
+  }
+  var tier = gameTier(Game.score);
+  var stars = Game.score >= 350 ? 6 : (Game.score >= 200 ? 5 : (Game.score >= 100 ? 4 : (Game.score >= 50 ? 3 : (Game.score >= 20 ? 2 : 1))));
+  box.innerHTML =
+    '<div class="result">' +
+    '<span class="result-tier">本局战绩</span>' +
+    '<div class="game-score">' + Game.score + '</div>' +
+    '<div class="result-name">' + tier.name + '</div>' +
+    '<div class="stars">' + starRow(stars) + '</div>' +
+    '<p class="result-quote">' + tier.sub + '</p>' +
+    '<p class="game-meta">摸到 ' + Game.fishCaught + ' 条鱼 · 最高连击 ' + Game.bestCombo + ' · 历史最高 ' + store.get('gbest', 0) + ' 分</p>' +
+    '<div class="game-actions">' +
+    '<button class="btn btn-primary" id="game-again">再来一局</button>' +
+    '<button class="btn btn-ghost" id="game-share">复制战报</button>' +
+    '</div></div>';
+  $('#game-again').addEventListener('click', startGame);
+  $('#game-share').addEventListener('click', function(){
+    copyText('我在「节前摸鱼研究所」30 秒摸了 ' + Game.fishCaught + ' 条鱼、拿了 ' + Game.score + ' 分，段位【' + tier.name + '】！手速连我自己都怕，来战？');
+  });
+}
+function bindGame(){
+  var cv = $('#game-canvas');
+  cv.addEventListener('pointermove', onPoke);
+  cv.addEventListener('pointerdown', onPoke);
+  $('#game-mute').addEventListener('click', function(){
+    Game.muted = !Game.muted;
+    $('#g-mute-ic').style.display = Game.muted ? 'none' : 'block';
+  });
+}
+function startGame(){
+  Game.state = 'playing';
+  Game.score = 0; Game.combo = 0; Game.bestCombo = 0; Game.multi = 1; Game.double = 0;
+  Game.timeLeft = 30; Game.fishCaught = 0; Game.speedBoost = 1;
+  Game.koiTimer = 0; Game.sharkTimer = 0; Game.lastTouch = 0; Game.lastTs = 0;
+  Game.fish = []; Game.parts = []; Game.texts = [];
+  for (var i = 0; i < 7; i++){ spawnFish('fish'); }
+  renderGame();
+  var cv = $('#game-canvas');
+  Game.w = cv.clientWidth;
+  cv.width = cv.clientWidth * (window.devicePixelRatio || 1);
+  cv.height = 400 * (window.devicePixelRatio || 1);
+  cv.getContext('2d').scale(window.devicePixelRatio || 1, window.devicePixelRatio || 1);
+}
+function spawnFish(kind){
+  var f = {
+    kind: kind || 'fish',
+    x: 40 + Math.random() * (Game.w - 80),
+    y: 40 + Math.random() * 320,
+    vx: (Math.random() > .5 ? 1 : -1) * (.6 + Math.random() * 1.2),
+    vy: (Math.random() - .5) * 1.2,
+    r: kind === 'shark' ? 26 : (kind === 'koi' ? 17 : 13 + Math.random() * 9),
+    life: kind === 'koi' ? 6 : (kind === 'shark' ? 7 : 0)
+  };
+  Game.fish.push(f);
+  if (kind === 'koi') Game.koiTimer = 13 + Math.random() * 5;
+  if (kind === 'shark') Game.sharkTimer = 9 + Math.random() * 4;
+}
+function loop(ts){
+  if (Game.state !== 'playing'){ Game.rafRunning = false; return; }
+  var dt = Math.min(.05, Game.lastTs ? (ts - Game.lastTs) / 1000 : .016);
+  Game.lastTs = ts;
+  Game.timeLeft -= dt;
+  Game.speedBoost = 1 + (30 - Game.timeLeft) / 30 * .9;
+  if (Game.timeLeft <= 0){ Game.timeLeft = 0; endGame(); return; }
+  Game.double = Math.max(0, Game.double - dt);
+  if (Game.lastTouch && ts - Game.lastTouch > 3000){ Game.combo = 0; Game.multi = 1; }
+  Game.koiTimer -= dt; if (Game.koiTimer <= 0) spawnFish('koi');
+  Game.sharkTimer -= dt; if (Game.sharkTimer <= 0) spawnFish('shark');
+  for (var i = Game.fish.length - 1; i >= 0; i--){
+    var f = Game.fish[i];
+    if (f.life > 0){ f.life -= dt; if (f.life <= 0){ Game.fish.splice(i, 1); continue; } }
+  }
+  var w = Game.w, h = 400;
+  Game.fish.forEach(function(f){
+    var sp = Game.speedBoost * (f.kind === 'shark' ? 1.5 : 1);
+    f.x += f.vx * sp * 60 * dt;
+    f.y += f.vy * sp * 60 * dt;
+    if (f.x < f.r){ f.x = f.r; f.vx = Math.abs(f.vx); }
+    if (f.x > w - f.r){ f.x = w - f.r; f.vx = -Math.abs(f.vx); }
+    if (f.y < f.r){ f.y = f.r; f.vy = Math.abs(f.vy); }
+    if (f.y > h - f.r){ f.y = h - f.r; f.vy = -Math.abs(f.vy); }
+    f.vy += (Math.random() - .5) * .5 * dt;
+  });
+  for (var p = Game.parts.length - 1; p >= 0; p--){
+    var pt = Game.parts[p];
+    pt.x += pt.vx * dt; pt.y += pt.vy * dt; pt.life -= dt; pt.vy += 40 * dt;
+    if (pt.life <= 0) Game.parts.splice(p, 1);
+  }
+  for (var t = Game.texts.length - 1; t >= 0; t--){
+    var tx = Game.texts[t];
+    tx.y -= 36 * dt; tx.life -= dt;
+    if (tx.life <= 0) Game.texts.splice(t, 1);
+  }
+  draw();
+  var tEl = $('#g-time'); if (tEl) tEl.textContent = Math.ceil(Game.timeLeft);
+  var sEl = $('#g-score'); if (sEl) sEl.textContent = Game.score;
+  var cEl = $('#g-combo'); if (cEl) cEl.textContent = Game.combo;
+  var mEl = $('#g-multi'); var mbEl = $('#g-multi-box');
+  if (mEl){ mEl.textContent = (Game.double > 0 ? 'x' + (Game.multi * 2) : 'x' + Game.multi); }
+  if (mbEl){ mbEl.classList.toggle('dbl', Game.double > 0); }
+  Game.raf = requestAnimationFrame(loop);
+}
+function onPoke(e){
+  if (Game.state !== 'playing') return;
+  var cv = $('#game-canvas');
+  var rect = cv.getBoundingClientRect();
+  poke(e.clientX - rect.left, e.clientY - rect.top);
+}
+function poke(x, y){
+  var hit = false;
+  for (var i = Game.fish.length - 1; i >= 0; i--){
+    var f = Game.fish[i];
+    var dx = f.x - x, dy = f.y - y;
+    if (dx * dx + dy * dy < (f.r + 20) * (f.r + 20)){
+      catchFish(f, i);
+      hit = true;
+    }
+  }
+  if (hit) Game.lastTouch = performance.now();
+}
+function catchFish(f, idx){
+  var now = performance.now();
+  if (Game.lastTouch && now - Game.lastTouch > 3000){ Game.combo = 0; }
+  Game.combo++;
+  Game.bestCombo = Math.max(Game.bestCombo, Game.combo);
+  Game.multi = Math.min(1 + Math.floor(Game.combo / 5), 5);
+  var base = f.kind === 'koi' ? 5 : (f.kind === 'shark' ? 0 : 1);
+  var gain = base * Game.multi * (Game.double > 0 ? 2 : 1);
+  Game.score += gain;
+  Game.fishCaught++;
+  burst(f.x, f.y, f.kind);
+  popText(f.x, f.y, '+' + gain + (Game.double > 0 ? ' ×2' : ''));
+  if (f.kind === 'koi'){
+    Game.double = 3;
+    beep(880, .12, .14);
+    setTimeout(function(){ beep(1320, .2, .12); }, 90);
+  } else if (f.kind === 'shark'){
+    Game.score -= 3;
+    Game.combo = 0; Game.multi = 1;
+    popText(f.x, f.y, '-3 鲨鱼！', '#FFB4A2');
+    beep(160, .3, .18);
+  } else {
+    beep(620 + Math.min(Game.combo, 20) * 28, .08, .1);
+  }
+  Game.fish.splice(idx, 1);
+  spawnFish('fish');
+}
+function burst(x, y, kind){
+  var colors = kind === 'koi' ? ['#FFD873', '#FFC53D'] : (kind === 'shark' ? ['#9FB4C7', '#7E8A99'] : ['#7FE3F6', '#AEE9FB', '#FFFFFF']);
+  for (var i = 0; i < 10; i++){
+    var a = Math.random() * Math.PI * 2, sp = 30 + Math.random() * 70;
+    Game.parts.push({ x: x, y: y, vx: Math.cos(a) * sp, vy: Math.sin(a) * sp - 30, life: .5 + Math.random() * .5, r: 2 + Math.random() * 4, c: rand(colors) });
+  }
+}
+function popText(x, y, txt, color){
+  Game.texts.push({ x: x, y: y, txt: txt, life: .9, c: color || '#FFFFFF' });
+}
+function draw(){
+  var cv = $('#game-canvas');
+  if (!cv) return;
+  var ctx = cv.getContext('2d');
+  var w = Game.w, h = 400;
+  ctx.clearRect(0, 0, w, h);
+  ctx.strokeStyle = 'rgba(255,255,255,.10)';
+  ctx.lineWidth = 1;
+  for (var i = 0; i < 6; i++){
+    var yy = 30 + i * 66, ph = (performance.now() / 900 + i) % 1;
+    ctx.beginPath();
+    for (var xx = 0; xx <= w; xx += 12){
+      var yyy = yy + Math.sin(xx / 40 + ph * Math.PI * 2) * 4;
+      if (xx === 0) ctx.moveTo(xx, yyy); else ctx.lineTo(xx, yyy);
+    }
+    ctx.stroke();
+  }
+  Game.fish.forEach(function(f){ drawFish(ctx, f, Math.atan2(f.vy, f.vx)); });
+  Game.parts.forEach(function(p){
+    ctx.globalAlpha = Math.max(0, p.life / .6);
+    ctx.fillStyle = p.c;
+    ctx.beginPath(); ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2); ctx.fill();
+  });
+  ctx.globalAlpha = 1;
+  Game.texts.forEach(function(t){
+    ctx.globalAlpha = Math.max(0, t.life / .7);
+    ctx.fillStyle = t.c;
+    ctx.font = '800 22px -apple-system,"PingFang SC","Microsoft YaHei",sans-serif';
+    ctx.textAlign = 'center';
+    ctx.fillText(t.txt, t.x, t.y);
+  });
+  ctx.globalAlpha = 1;
+  if (Game.double > 0){
+    ctx.fillStyle = 'rgba(255,197,61,.95)';
+    ctx.font = '800 26px -apple-system,"PingFang SC","Microsoft YaHei",sans-serif';
+    ctx.textAlign = 'center';
+    ctx.fillText('DOUBLE ×2 ' + Game.double.toFixed(1) + 's', w / 2, 36);
+  }
+}
+function drawFish(ctx, f, ang){
+  ctx.save();
+  ctx.translate(f.x, f.y);
+  ctx.rotate(ang);
+  if (f.kind === 'koi'){
+    ctx.fillStyle = '#FFC53D';
+    ctx.beginPath(); ctx.ellipse(0, 0, f.r, f.r * .55, 0, 0, Math.PI * 2); ctx.fill();
+    ctx.fillStyle = '#E8A83C';
+    ctx.beginPath(); ctx.moveTo(-f.r * .7, -f.r * .35); ctx.lineTo(-f.r * 1.6, 0); ctx.lineTo(-f.r * .7, f.r * .35); ctx.closePath(); ctx.fill();
+  } else if (f.kind === 'shark'){
+    ctx.fillStyle = '#8CA3B8';
+    ctx.beginPath(); ctx.ellipse(0, 0, f.r, f.r * .5, 0, 0, Math.PI * 2); ctx.fill();
+    ctx.beginPath(); ctx.moveTo(-f.r * .7, -f.r * .3); ctx.lineTo(-f.r * 1.5, 0); ctx.lineTo(-f.r * .7, f.r * .3); ctx.closePath(); ctx.fill();
+    ctx.beginPath(); ctx.moveTo(-f.r * .1, -f.r * .4); ctx.lineTo(-f.r * .25, -f.r * 1.05); ctx.lineTo(f.r * .3, -f.r * .45); ctx.closePath(); ctx.fill();
+  } else {
+    var colors = ['#F26D5B', '#F5A93B', '#4FB3C7'];
+    ctx.fillStyle = colors[Math.floor((f.x + f.y) / 40) % 3];
+    ctx.beginPath(); ctx.ellipse(0, 0, f.r, f.r * .55, 0, 0, Math.PI * 2); ctx.fill();
+    ctx.beginPath(); ctx.moveTo(-f.r * .7, -f.r * .35); ctx.lineTo(-f.r * 1.5, 0); ctx.lineTo(-f.r * .7, f.r * .35); ctx.closePath(); ctx.fill();
+  }
+  ctx.fillStyle = '#fff';
+  ctx.beginPath(); ctx.arc(f.r * .45, -f.r * .15, Math.max(2.2, f.r * .18), 0, Math.PI * 2); ctx.fill();
+  ctx.fillStyle = '#222';
+  ctx.beginPath(); ctx.arc(f.r * .5, -f.r * .15, Math.max(1.2, f.r * .09), 0, Math.PI * 2); ctx.fill();
+  ctx.restore();
+}
+function endGame(){
+  Game.state = 'done';
+  if (Game.rafRunning){ cancelAnimationFrame(Game.raf); Game.rafRunning = false; }
+  store.set('gbest', Math.max(store.get('gbest', 0), Game.score));
+  store.set('gplays', (store.get('gplays', 0) || 0) + 1);
+  store.set('gfish', (store.get('gfish', 0) || 0) + Game.fishCaught);
+  store.set('gcombo', Math.max(store.get('gcombo', 0) || 0, Game.bestCombo));
+  renderGame();
+}
+
 /* ===== 模块：老板键 ===== */
 var DOC_TITLE = '节前摸鱼研究所 · 放假倒计时';
 var FAV_ORIG = document.querySelector('link[rel="icon"]').getAttribute('href');
@@ -886,12 +1222,13 @@ function routeFromHash(){
   return m ? m[1] : 'home';
 }
 function switchView(name){
-  var allowed = ['home', 'quiz', 'excuse', 'report', 'about'];
+  var allowed = ['home', 'quiz', 'excuse', 'report', 'game', 'about'];
   if (allowed.indexOf(name) < 0) name = 'home';
   $$('.view').forEach(function(v){ v.classList.toggle('is-active', v.getAttribute('data-view') === name); });
   $$('.tab').forEach(function(t){ t.classList.toggle('is-active', t.getAttribute('data-go') === name); });
   if (name === 'quiz') renderQuiz();
   if (name === 'report') renderReport();
+  if (name === 'game') renderGame();
   window.scrollTo(0, 0);
 }
 function go(name){
