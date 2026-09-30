@@ -1,0 +1,5 @@
+# 本地与自检产物
+.DS_Store
+_shots/
+node_modules/
+*.log
